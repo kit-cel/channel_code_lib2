@@ -1,0 +1,39 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "channel-code-lib2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Andrej Rode", email = "rode@kit.edu" },
+    { name = "Leo Wursthorn" },
+    { name = "Jonathan Mandelbaum", email = "jonathan.mandelbaum@kit.edu" },
+]
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "galois",
+  "pandas",
+  "scipy",
+  "matplotlib",
+  "xlrd",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+build-dir = "build/{wheel_tag}"
+
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/**/*.{h,c,hpp,cpp}" }, { file = "CMakeLists.txt" }]
+
+[dependency-groups]
+dev = [
+    "ipython>=8.38.0",
+]
+

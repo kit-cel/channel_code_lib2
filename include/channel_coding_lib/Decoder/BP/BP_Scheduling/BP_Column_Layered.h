@@ -1,0 +1,43 @@
+/**
+ * @file BP_Column_Layered.h
+ * @brief Implements column-layered scheduling for BP decoding
+ */
+
+#ifndef BP_COLUMN_LAYERED_H
+#define BP_COLUMN_LAYERED_H
+
+#include <channel_coding_lib/Decoder/BP/BP_Decoder.h>
+
+/**
+ * @class BP_Column_Layered
+ * @brief Implementation of column-layered scheduling for BP decoding
+ *
+ * This class provides column-layering as a scheduling implementation that can be
+ * called in BP_Decoder::decode.
+ *
+ * Rather than using an implementation of the BP_CN_Processing interface,
+ * column-layering relies on it's own check node processing rule.
+ *
+ * Because this class is not derived from BP_Decoder but included via the
+ * BP_Scheduling interface, all methods work on a reference of the decoder
+ * object BP_Scheduling::BP.
+ */
+class BP_Column_Layered : public BP_Scheduling
+{
+public:
+    using BP_Scheduling::BP_Scheduling;
+
+    std::vector<size_t> schedule;                    // Order in which layered decoder iterates over nodes
+    std::vector<std::vector<size_t>> nodes_in_layer; // Set of nodes for each scheduling layer
+    std::vector<double> cn_memory;                   // Check node memory used in column-layered decoding
+
+    void init(const BP_config& config) override;
+    void decode(const std::vector<double> &LLR_received) override;
+
+    void cn_memory_init(size_t j);
+    void process_ingoing_messages(size_t i);
+    void variable_node_update(size_t i);
+    void cn_memory_update(size_t i);
+};
+
+#endif // BP_COLUMN_LAYERED_H
